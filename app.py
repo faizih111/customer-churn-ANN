@@ -2,10 +2,15 @@ import streamlit as st
 import numpy as np
 import joblib
 from tensorflow.keras.models import load_model
+import os
 
-# Load model and scaler
-model = load_model("model.h5")
-scaler = joblib.load("scaler.pkl")
+# Load model
+model_path = os.path.join(os.path.dirname(__file__), "model.h5")
+model = load_model(model_path)
+
+# Load scaler
+scaler_path = os.path.join(os.path.dirname(__file__), "scaler.pkl")
+scaler = joblib.load(scaler_path)
 
 st.set_page_config(page_title="Customer Churn App", layout="wide")
 
@@ -45,7 +50,10 @@ if st.button("Predict"):
             ]
         ]
     )
+    # Scale features
     features_scaled = scaler.transform(features)
+
+    # Predict
     prediction = model.predict(features_scaled)
 
     st.subheader("Prediction Result:")
